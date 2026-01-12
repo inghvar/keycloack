@@ -1,0 +1,40 @@
+name: Deploy Keycloak with Custom Theme
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build Keycloak image with custom theme
+        run: |
+          docker build -t custom-keycloak .
+
+      - name: Upload compose and config to VM
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.AZURE_SERVER_IP }}
+          username: ${{ secrets.AZURE_SERVER_USER }}
+          key: ${{ secrets.AZURE_SSH_KEY }}
+          port: ${{ secrets.AZURE_SSH_PORT }}
+          source: "./docker-compose.yaml,./keycloak.conf"
+          target: /home/azureuser/keycloak/
+
+      - name: Deploy on VM
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.AZURE_SERVER_IP }}
+          username: ${{ secrets.AZURE_SERVER_USER }}
+          key: ${{ secrets.AZURE_SSH_KEY }}
+          port: ${{ secrets.AZURE_SSH_PORT }}
+          script: |
+            cd /home/azureuser/keycloak
+            docker compose down || true
+            docker compose up -d

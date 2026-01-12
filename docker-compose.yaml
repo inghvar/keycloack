@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  keycloak:
+    build: .
+    image: custom-keycloak
+    container_name: keycloak
+    restart: unless-stopped
+    ports:
+      - '8080:8080'
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_DB_PASSWORD: ${KC_DB_PASSWORD}
+    volumes:
+      - ./keycloak.conf:/opt/keycloak/conf/keycloak.conf
