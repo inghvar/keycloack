@@ -1,0 +1,23 @@
+# env files
+.env
+.env.*
+!.env.example
+
+# secrets / keys
+*.pem
+*.key
+id_rsa
+id_rsa.pub
+
+# Docker
+*.log
+docker-compose.override.yml
+
+# OS / editor
+.DS_Store
+.idea/
+.vscode/
+
+# Python (если есть)
+__pycache__/
+*.pyc
