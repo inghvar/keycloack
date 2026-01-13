@@ -14,3 +14,4 @@ services:
       KC_DB_PASSWORD: ${KC_DB_PASSWORD}
     volumes:
       - ./keycloak.conf:/opt/keycloak/conf/keycloak.conf
+      - ./theme:/opt/keycloak/providers
