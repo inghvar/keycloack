@@ -40,6 +40,6 @@ jobs:
           script: |
             docker login ${{ secrets.REGISTRY_SERVER }} -u ${{ secrets.REGISTRY_USERNAME }} -p ${{ secrets.REGISTRY_PASSWORD }}
             docker pull ${{ secrets.REGISTRY_SERVER }}/custom-keycloak:latest
-            cd /home/azureuser/keycloak
+            cd /home/azureuser/keycloack
             docker compose down || true
             docker compose up -d
