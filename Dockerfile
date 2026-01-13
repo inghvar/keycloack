@@ -1,3 +1,5 @@
 FROM keycloak/keycloak:nightly
 
-COPY ./theme /opt/keycloak/themes/custom
+COPY theme/keycloak-theme.jar /opt/keycloak/providers/keycloak-theme.jar
+
+RUN /opt/keycloak/bin/kc.sh build
