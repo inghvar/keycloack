@@ -4,6 +4,7 @@ services:
   keycloak:
     build: .
     image: quay.io/keycloak/keycloak:26.0.7
+    command: start
     container_name: keycloak
     restart: unless-stopped
     ports:
