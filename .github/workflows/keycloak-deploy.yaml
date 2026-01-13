@@ -7,27 +7,8 @@ on:
   workflow_dispatch:
 
 jobs:
-  build_and_push:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Login to Azure Container Registry
-        uses: azure/docker-login@v1
-        with:
-          login-server: ${{ secrets.REGISTRY_SERVER }}
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-
-      - name: Build and push Keycloak image
-        run: |
-          docker build -t ${{ secrets.REGISTRY_SERVER }}/custom-keycloak:latest .
-          docker push ${{ secrets.REGISTRY_SERVER }}/custom-keycloak:latest
-
   deploy:
     runs-on: ubuntu-latest
-    needs: build_and_push
 
     steps:
       - name: Deploy on server
@@ -38,8 +19,10 @@ jobs:
           key: ${{ secrets.AZURE_SSH_KEY }}
           port: ${{ secrets.AZURE_SSH_PORT }}
           script: |
-            docker login ${{ secrets.REGISTRY_SERVER }} -u ${{ secrets.REGISTRY_USERNAME }} -p ${{ secrets.REGISTRY_PASSWORD }}
-            docker pull ${{ secrets.REGISTRY_SERVER }}/custom-keycloak:latest
+            set -e
             cd /home/azureuser/keycloack
+            git fetch --all
+            git reset --hard origin/main
             docker compose down || true
+            docker compose pull
             docker compose up -d
