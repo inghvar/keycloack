@@ -3,7 +3,7 @@ version: '3.8'
 services:
   keycloak:
     build: .
-    image: custom-keycloak
+    image: quay.io/keycloak/keycloak:26.0.7
     container_name: keycloak
     restart: unless-stopped
     ports:
